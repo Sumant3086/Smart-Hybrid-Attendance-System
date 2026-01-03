@@ -7,6 +7,10 @@ package-lock.json
 .env.local
 .env.production
 
+# Admin credentials (SECURITY)
+ADMIN_SETUP.md
+QUICK_LOGIN.txt
+
 # Logs
 *.log
 npm-debug.log*

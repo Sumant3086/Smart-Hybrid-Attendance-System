@@ -59,14 +59,19 @@ export const register = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
     
-    // Log registration
-    await createAuditLog(
-      { ...req, user: { _id: user._id } },
-      'REGISTER',
-      'User',
-      user._id,
-      { role: user.role, email: user.email }
-    );
+    // Log registration - wrapped in try-catch to prevent crashes
+    try {
+      await createAuditLog(
+        { ...req, user: { _id: user._id } },
+        'REGISTER',
+        'User',
+        user._id,
+        { role: user.role, email: user.email }
+      );
+    } catch (auditError) {
+      console.error('Audit logging failed:', auditError);
+      // Continue with response even if audit logging fails
+    }
     
     res.status(201).json({
       success: true,
@@ -119,13 +124,19 @@ export const login = async (req, res) => {
       });
     }
     
+    console.log('About to generate tokens...');
+    
     // Generate tokens
     const accessToken = generateAccessToken(user._id, user.role);
     const refreshToken = generateRefreshToken(user._id);
     
+    console.log('Tokens generated successfully');
+    
     // Save refresh token
     user.refreshToken = refreshToken;
+    console.log('About to save user with refresh token...');
     await user.save();
+    console.log('User saved successfully');
     
     // Set refresh token in httpOnly cookie
     res.cookie('refreshToken', refreshToken, {
@@ -135,19 +146,26 @@ export const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
     
+    console.log('Cookie set successfully');
+    
     // Remove password from response
     user.password = undefined;
     
     console.log('Login successful, sending response');
     
-    // Log successful login
-    await createAuditLog(
-      { ...req, user: { _id: user._id } },
-      'LOGIN',
-      'User',
-      user._id,
-      { role: user.role, email: user.email }
-    );
+    // Log successful login - wrapped in try-catch to prevent crashes
+    try {
+      await createAuditLog(
+        { ...req, user: { _id: user._id } },
+        'LOGIN',
+        'User',
+        user._id,
+        { role: user.role, email: user.email }
+      );
+    } catch (auditError) {
+      console.error('Audit logging failed:', auditError);
+      // Continue with response even if audit logging fails
+    }
     
     res.json({
       success: true,
@@ -229,14 +247,19 @@ export const logout = async (req, res) => {
     // Clear cookie
     res.clearCookie('refreshToken');
     
-    // Log logout
-    await createAuditLog(
-      req,
-      'LOGOUT',
-      'User',
-      req.user._id,
-      { email: req.user.email }
-    );
+    // Log logout - wrapped in try-catch to prevent crashes
+    try {
+      await createAuditLog(
+        req,
+        'LOGOUT',
+        'User',
+        req.user._id,
+        { email: req.user.email }
+      );
+    } catch (auditError) {
+      console.error('Audit logging failed:', auditError);
+      // Continue with response even if audit logging fails
+    }
     
     res.json({
       success: true,

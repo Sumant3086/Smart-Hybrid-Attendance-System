@@ -58,6 +58,7 @@ import auditRoutes from './routes/auditRoutes.js';
 import onlineSessionRoutes from './routes/onlineSessionRoutes.js';
 import zoomRoutes from './routes/zoomRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/classes', classRoutes);
@@ -68,6 +69,7 @@ app.use('/api/audit', auditRoutes);
 app.use('/api/online-sessions', onlineSessionRoutes);
 app.use('/api/zoom', zoomRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handlers
 app.use(notFound);

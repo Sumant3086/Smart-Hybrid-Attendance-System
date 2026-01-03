@@ -278,7 +278,7 @@ export default function Analytics() {
                         </tr>
                       </thead>
                       <tbody>
-                        {analytics.atRiskStudents.map((student, index) => (
+                        {(analytics?.atRiskStudents || []).map((student, index) => (
                           <motion.tr
                             key={student._id}
                             initial={{ opacity: 0, x: -20 }}
@@ -323,7 +323,7 @@ export default function Analytics() {
                     <h2 className="text-2xl font-bold">Attendance Trend (Last 30 Days)</h2>
                   </div>
                   <div className="space-y-4">
-                    {analytics.dailyTrend.slice(-10).map((day, index) => (
+                    {(analytics?.dailyTrend || []).slice(-10).map((day, index) => (
                       <div key={index} className="flex items-center space-x-4">
                         <div className="w-32 text-sm text-gray-600 dark:text-gray-400">
                           {new Date(day.date).toLocaleDateString()}
@@ -377,7 +377,7 @@ export default function Analytics() {
                       </tr>
                     </thead>
                     <tbody>
-                      {analytics?.sessionBreakdown.slice(0, 10).map((session, index) => (
+                      {(analytics?.sessionBreakdown || []).slice(0, 10).map((session, index) => (
                         <motion.tr
                           key={session.id}
                           initial={{ opacity: 0, x: -20 }}

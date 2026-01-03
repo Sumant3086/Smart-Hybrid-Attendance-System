@@ -25,42 +25,34 @@ const seedDatabase = async () => {
       department: 'Administration',
     });
     
-    // Create faculty
-    const faculty = await User.create({
-      name: 'Dr. John Smith',
-      email: 'faculty@example.com',
-      password: 'faculty123',
-      role: 'FACULTY',
-      department: 'Computer Science',
-    });
+    // Create 50 faculty members
+    const facultyData = [];
+    for (let i = 1; i <= 50; i++) {
+      facultyData.push({
+        name: `faculty${i}`,
+        email: `faculty${i}@gmail.com`,
+        password: `faculty${i}123`,
+        role: 'FACULTY',
+        department: 'Computer Science',
+      });
+    }
     
-    // Create students
-    const students = await User.create([
-      {
-        name: 'Alice Johnson',
-        email: 'alice@example.com',
-        password: 'student123',
+    const faculty = await User.create(facultyData);
+    
+    // Create 500 student users
+    const studentData = [];
+    for (let i = 1; i <= 500; i++) {
+      studentData.push({
+        name: `user${i}`,
+        email: `user${i}@gmail.com`,
+        password: `user${i}123`,
         role: 'STUDENT',
-        studentId: 'STU001',
+        studentId: `STU${i.toString().padStart(3, '0')}`,
         department: 'Computer Science',
-      },
-      {
-        name: 'Bob Williams',
-        email: 'bob@example.com',
-        password: 'student123',
-        role: 'STUDENT',
-        studentId: 'STU002',
-        department: 'Computer Science',
-      },
-      {
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
-        password: 'student123',
-        role: 'STUDENT',
-        studentId: 'STU003',
-        department: 'Computer Science',
-      },
-    ]);
+      });
+    }
+    
+    const students = await User.create(studentData);
     
     console.log('Creating classes...');
     
@@ -70,7 +62,7 @@ const seedDatabase = async () => {
         name: 'Data Structures and Algorithms',
         code: 'CS201',
         description: 'Introduction to data structures',
-        faculty: faculty._id,
+        faculty: faculty[0]._id, // Using first faculty member
         department: 'Computer Science',
         semester: 'Fall 2024',
         students: students.map((s) => s._id),
@@ -79,7 +71,7 @@ const seedDatabase = async () => {
         name: 'Database Management Systems',
         code: 'CS301',
         description: 'Relational databases and SQL',
-        faculty: faculty._id,
+        faculty: faculty[1]._id, // Using second faculty member
         department: 'Computer Science',
         semester: 'Fall 2024',
         students: students.map((s) => s._id),
@@ -88,9 +80,9 @@ const seedDatabase = async () => {
     
     console.log('✅ Database seeded successfully!');
     console.log('\n🔐 Login credentials:');
-    console.log(`👑 Admin: ${admin.email} / [password from env]`);
-    console.log('👨‍🏫 Faculty: faculty@example.com / faculty123');
-    console.log('👨‍🎓 Student: alice@example.com / student123');
+    console.log('👑 Admin credentials configured');
+    console.log('👨‍🏫 Faculty: faculty1@gmail.com / faculty1123 (and faculty2, faculty3... up to faculty50)');
+    console.log('👨‍🎓 Students: user1@gmail.com / user1123 (and user2, user3... up to user500)');
     
     process.exit(0);
   } catch (error) {
