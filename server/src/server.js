@@ -23,6 +23,10 @@ import { generateQRToken, getQRRotationInterval } from './utils/qr.js';
 dotenv.config();
 
 const app = express();
+
+// Trust proxy for rate limiting (required for Render deployment)
+app.set('trust proxy', 1);
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
